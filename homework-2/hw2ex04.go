@@ -14,7 +14,7 @@ func main() {
 	}
 	for i, p := range array {
 		if p != 0 {
-			for index, _ := range array {
+			for index := i; index < len(array); index++ {
 				if p != array[index] && array[index] % p == 0 {
 					array[index] = 0
 				}
