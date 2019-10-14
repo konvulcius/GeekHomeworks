@@ -16,11 +16,22 @@ func main() {
 	addressBook["Dmitriy"] = []int{89034523123}
 	addressBook["Vsevolod"] = []int{909236}
 	addressBook["Vsevolod"] = append(addressBook["Vsevolod"], 89125678902)
+	addressBook["Vsevolod"] = append(addressBook["Vsevolod"], 89125674444)
 
 	b, err := json.Marshal(addressBook)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	ioutil.WriteFile("death_note.txt", b, 0777)
+	readed, err2 := ioutil.ReadFile("death_note.txt")
+	if err2 != nil {
+		log.Println(err)
+		return
+	}
+	for diff := range b {
+		if b[diff] != readed[diff] {
+			ioutil.WriteFile("death_note.txt", b, 0777)
+			break
+		}
+	}
 }
