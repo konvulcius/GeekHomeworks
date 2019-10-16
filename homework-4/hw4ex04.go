@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 type wrongPos struct {
@@ -26,37 +25,78 @@ type knightPosition struct {
 
 type canGo []knightPosition
 
-func (pos *knightPosition) FindWay() (canGo, error) {
-	arr := make(canGo, 0, 8)
-	var result canGo
-	var newPos knightPosition
+var allPoint canGo
 
+func (pos knightPosition) FirstPoint() {
+	pos.x += 1
+	pos.y += 2
+	if pos.x < 8 && pos.y < 8 {
+		allPoint = append(allPoint, pos)
+	}
+}
+func (pos knightPosition) SecondPoint() {
+	pos.x += 1
+	pos.y -= 2
+	if pos.x < 8 && pos.y > 0 {
+		allPoint = append(allPoint, pos)
+	}
+}
+func (pos knightPosition) FirdPoint() {
+	pos.x -= 1
+	pos.y += 2
+	if pos.x > 0 && pos.y < 8 {
+		allPoint = append(allPoint, pos)
+	}
+}
+func (pos knightPosition) FourthPoint() {
+	pos.x -= 1
+	pos.y -= 2
+	if pos.x > 0 && pos.y > 0 {
+		allPoint = append(allPoint, pos)
+	}
+}
+func (pos knightPosition) FifthPoint() {
+	pos.x += 2
+	pos.y += 1
+	if pos.x < 8 && pos.y < 8 {
+		allPoint = append(allPoint, pos)
+	}
+}
+func (pos knightPosition) SixthPoint() {
+	pos.x -= 2
+	pos.y += 1
+	if pos.x > 0 && pos.y < 8 {
+		allPoint = append(allPoint, pos)
+	}
+}
+func (pos knightPosition) SeventhPoint() {
+	pos.x += 2
+	pos.y -= 1
+	if pos.x < 8 && pos.y > 0 {
+		allPoint = append(allPoint, pos)
+	}
+}
+func (pos knightPosition) EigthPoint() {
+	pos.x -= 2
+	pos.y -= 1
+	if pos.x > 0 && pos.y > 0 {
+		allPoint = append(allPoint, pos)
+	}
+}
+
+func (pos *knightPosition) FindWay() (canGo, error) {
 	if pos.x < 1 || pos.y < 1 || pos.x > 8 || pos.y > 8 {
 		return nil, wrong()
 	}
-	for distance := -2; distance <= 2; distance++ {
-		if distance != 0 {
-			if math.Sqrt(float64(distance*distance)) == 2 {
-				newPos.x = pos.x + distance
-				newPos.y = pos.y + 1
-				arr = append(arr, newPos)
-				newPos.y = pos.y - 1
-				arr = append(arr, newPos)
-			} else {
-				newPos.x = pos.x + distance
-				newPos.y = pos.y + 2
-				arr = append(arr, newPos)
-				newPos.y = pos.y - 2
-				arr = append(arr, newPos)
-			}
-		}
-	}
-	for _, val := range arr {
-		if val.x > 0 && val.y > 0 {
-			result = append(result, val)
-		}
-	}
-	return result, nil
+	pos.FirstPoint()
+	pos.SecondPoint()
+	pos.FirdPoint()
+	pos.FourthPoint()
+	pos.FifthPoint()
+	pos.SixthPoint()
+	pos.SeventhPoint()
+	pos.EigthPoint()
+	return allPoint, nil
 }
 
 func (pos knightPosition) String() string {
@@ -64,7 +104,7 @@ func (pos knightPosition) String() string {
 }
 
 func main() {
-	some := knightPosition{0, 0}
+	some := knightPosition{5, 5}
 	arr, err := some.FindWay()
 	if err == nil {
 		fmt.Println(arr)
