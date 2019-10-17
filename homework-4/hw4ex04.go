@@ -37,8 +37,8 @@ func (pos knightPosition) OtherPoint(x, y int) {
 
 func (pos *knightPosition) FindWay() (canGo, error) {
 	movePoint := canGo{
-		{1, 2},
-		{1, -2},
+		{1, 2,},
+		{1, -2,},
 		{-1, 2,},
 		{-1, -2,},
 	}
