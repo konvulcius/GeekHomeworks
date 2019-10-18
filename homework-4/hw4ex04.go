@@ -25,32 +25,32 @@ type knightPosition struct {
 
 type canGo []knightPosition
 
-var allPoint canGo
-
-func (pos knightPosition) OtherPoint(x, y int) {
+func (pos knightPosition) OtherPoint(x int, y int, point canGo) canGo {
 	pos.x += x
 	pos.y += y
-	if pos.x > 0 && pos.x < 8 && pos.y > 0 && pos.y < 8 {
-		allPoint = append(allPoint, pos)
+	if pos.x > 0 && pos.x <= 8 && pos.y > 0 && pos.y <= 8 {
+		point = append(point, pos)
 	}
+	return point
 }
 
 func (pos *knightPosition) FindWay() (canGo, error) {
 	movePoint := canGo{
-		{1, 2},
-		{1, -2},
+		{1, 2,},
+		{1, -2,},
 		{-1, 2,},
 		{-1, -2,},
 	}
+	var findPoints canGo
 
 	if pos.x < 1 || pos.y < 1 || pos.x > 8 || pos.y > 8 {
 		return nil, wrong()
 	}
 	for _, val := range movePoint {
-		pos.OtherPoint(val.y, val.x)
-		pos.OtherPoint(val.x, val.y)
+		findPoints = pos.OtherPoint(val.y, val.x, findPoints)
+		findPoints = pos.OtherPoint(val.x, val.y, findPoints)
 	}
-	return allPoint, nil
+	return findPoints, nil
 }
 
 func (pos knightPosition) String() string {
@@ -58,7 +58,7 @@ func (pos knightPosition) String() string {
 }
 
 func main() {
-	some := knightPosition{1, 1}
+	some := knightPosition{7, 7}
 	arr, err := some.FindWay()
 	if err == nil {
 		fmt.Println(arr)
