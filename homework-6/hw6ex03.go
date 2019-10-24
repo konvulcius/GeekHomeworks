@@ -5,24 +5,15 @@ import (
 	"net/http"
 )
 
-func hello(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Content-Type", "text/html")
-	io.WriteString(res,
-		`<doctype html>
-<html>
-	<head>
-    	<title>Hello World!</title>
-	</head>
-	<body>
-    	Hello World!
-	</body>
-</html>`)
+func hello(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	io.WriteString(w, r.URL.Query().Get("name"))
 }
 
 func main() {
 	fs := http.FileServer(http.Dir("static"))
-	http.Handle("/", fs)
-	http.HandleFunc("/hello", hello)
+	http.Handle("/Users/acthulhu/study/geekbrains/go/src/GoCourse/homework-6", fs)
+	http.HandleFunc("/", hello)
 
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":4242", nil)
 }
