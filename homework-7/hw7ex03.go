@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -9,22 +10,37 @@ import (
 )
 
 func main() {
+	close := make(chan int)
+	ex := make([]byte, 4)
+
+	go func() {
+		for {
+			os.Stdin.Read(ex)
+			if string(ex) == "exit" {
+				break
+			}
+		}
+		close <- 1
+	}()
+
 	listener, err := net.Listen("tcp", "localhost:8000")
 	if err != nil {
 		log.Fatal(err)
 	}
-	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			log.Print(err)
-			continue
+	go func() {
+		for {
+			conn, err := listener.Accept()
+			if err != nil {
+				log.Print(err)
+				continue
+			}
+			go handleConn(conn)
 		}
-		go func() {
-			os.Stdin.Read(make([]byte, 1))
-			return
-		}()
-		go handleConn(conn)
-	}
+	}()
+
+	<-close
+	listener.Close()
+	fmt.Println("Server has been closed!")
 }
 
 func handleConn(c net.Conn) {
@@ -36,4 +52,5 @@ func handleConn(c net.Conn) {
 		}
 		time.Sleep(1 * time.Second)
 	}
+
 }
