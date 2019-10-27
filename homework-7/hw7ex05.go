@@ -21,11 +21,11 @@ func main() {
 		wStart.Add(1)
 		go func(auto string) {
 			go func() {
-				time.Sleep(time.Duration(rand.Intn(12000)) * time.Millisecond)
+				time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
 				defer wStart.Done()
 			}()
 			<-goStart
-			time.Sleep(time.Duration(rand.Intn(5000)) * time.Millisecond)
+			time.Sleep(time.Duration(rand.Intn(8000)) * time.Millisecond)
 			fmt.Println(auto, "it's time", time.Now().Format("15:04:05.000"))
 			defer wFinish.Done()
 		}(auto)
