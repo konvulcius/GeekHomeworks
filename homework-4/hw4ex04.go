@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 type wrongPos struct {
@@ -26,37 +25,32 @@ type knightPosition struct {
 
 type canGo []knightPosition
 
+func (pos knightPosition) OtherPoint(x int, y int, point canGo) canGo {
+	pos.x += x
+	pos.y += y
+	if pos.x > 0 && pos.x <= 8 && pos.y > 0 && pos.y <= 8 {
+		point = append(point, pos)
+	}
+	return point
+}
+
 func (pos *knightPosition) FindWay() (canGo, error) {
-	arr := make(canGo, 0, 8)
-	var result canGo
-	var newPos knightPosition
+	movePoint := canGo{
+		{1, 2,},
+		{1, -2,},
+		{-1, 2,},
+		{-1, -2,},
+	}
+	var findPoints canGo
 
 	if pos.x < 1 || pos.y < 1 || pos.x > 8 || pos.y > 8 {
 		return nil, wrong()
 	}
-	for distance := -2; distance <= 2; distance++ {
-		if distance != 0 {
-			if math.Sqrt(float64(distance*distance)) == 2 {
-				newPos.x = pos.x + distance
-				newPos.y = pos.y + 1
-				arr = append(arr, newPos)
-				newPos.y = pos.y - 1
-				arr = append(arr, newPos)
-			} else {
-				newPos.x = pos.x + distance
-				newPos.y = pos.y + 2
-				arr = append(arr, newPos)
-				newPos.y = pos.y - 2
-				arr = append(arr, newPos)
-			}
-		}
+	for _, val := range movePoint {
+		findPoints = pos.OtherPoint(val.y, val.x, findPoints)
+		findPoints = pos.OtherPoint(val.x, val.y, findPoints)
 	}
-	for _, val := range arr {
-		if val.x > 0 && val.y > 0 {
-			result = append(result, val)
-		}
-	}
-	return result, nil
+	return findPoints, nil
 }
 
 func (pos knightPosition) String() string {
@@ -64,7 +58,7 @@ func (pos knightPosition) String() string {
 }
 
 func main() {
-	some := knightPosition{0, 0}
+	some := knightPosition{7, 7}
 	arr, err := some.FindWay()
 	if err == nil {
 		fmt.Println(arr)
